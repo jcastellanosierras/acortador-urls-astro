@@ -3,15 +3,19 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "astro dev --remote",
     "start": "astro dev",
-    "build": "astro check && astro build",
-    "preview": "astro preview",
+    "build": "astro check && astro build --remote",
+    "preview": "astro preview --remote",
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^4.6.3",
     "@astrojs/check": "^0.5.10",
+    "@astrojs/db": "^0.10.5",
+    "@astrojs/node": "^8.2.5",
+    "@auth/core": "^0.18.6",
+    "astro": "^4.6.3",
+    "auth-astro": "^4.1.1",
     "typescript": "^5.4.5"
   }
 }
