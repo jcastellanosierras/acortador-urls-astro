@@ -60,7 +60,10 @@ if (
       </div>
     )
     : (
-      <button id="login">Login</button>
+      <div id="logins">
+        <button class="login" id="login-google">Login with Google</button>
+        <button class="login" id="login-github">Login with Github</button>
+      </div>
     )
   }
 </header>
@@ -79,13 +82,13 @@ if (
     cursor: pointer;
   }
 
-  #login {
+  .login {
     color: white;
     font-size: 1.1rem;
     font-weight: 500;
   }
 
-  #login:hover {
+  .login:hover {
     color: gray;
   }
 
@@ -145,15 +148,27 @@ if (
   button:hover {
     color: gray;
   }
+
+  #logins {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
 </style>
 
 <script>
   const { signIn, signOut } = await import("auth-astro/client")
   
-  const login = document.querySelector("#login") as HTMLButtonElement
+  const loginWithGoogle = document.querySelector("#login-google") as HTMLButtonElement
 
-  if (login) {
-    login.onclick = () => signIn("github")
+  if (loginWithGoogle) {
+    loginWithGoogle.onclick = () => signIn("google")
+  }
+
+  const loginWithGithub = document.querySelector("#login-github") as HTMLButtonElement
+
+  if (loginWithGithub) {
+    loginWithGithub.onclick = () => signIn("github")
   }
 
   const logout = document.querySelector("#logout") as HTMLButtonElement
