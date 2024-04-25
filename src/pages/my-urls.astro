@@ -1,0 +1,94 @@
+---
+import { getSession } from "auth-astro/server";
+import Layout from "../layouts/Layout.astro";
+import { getUserByEmail, getUrlsFromUser } from "../utils/db";
+
+const session = await getSession(Astro.request)
+
+const h1 = session
+  ? `URLs acortadas de ${session.user?.name?.split(' ')[0]}`
+  : 'Inicia sesión para ver tus URLs acortadas'
+
+let urls: {
+  url: string;
+  code: string;
+}[] = []
+
+if (session && session.user?.email) {
+  const user = await getUserByEmail(session.user.email)
+
+  if (user.success && user.data) {
+    const urlsRes = await getUrlsFromUser(user.data?.id)
+
+    if (urlsRes.success && urlsRes.data) {
+      urls = urlsRes.data.map(url => url)
+    }
+  }
+}
+---
+
+<Layout title="Mis URLs acortadas">
+  <h1>{h1}</h1>
+  <ul>
+    {urls.map(url => (
+      <li>
+        <span>{url.url}</span>
+        <button value={url.code} class="copy-shortened-url">Copy the shortened URL</button>
+      </li>
+    ))}
+  </ul>
+</Layout>
+
+<style>
+  ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  li {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  button {
+    background-color: rgb(77, 74, 74);
+    border: none;
+    color: white;
+    padding: 0.6rem;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+  }
+
+  button:hover {
+    background-color: rgb(57, 54, 54);
+  }
+</style>
+
+<script>
+  import { toast } from 'sonner'
+
+  const url = window.location.origin
+
+  const copyShortenedUrl = document.getElementsByClassName('copy-shortened-url') as HTMLCollectionOf<HTMLButtonElement>
+
+  if (copyShortenedUrl) {
+    for (const button of copyShortenedUrl) {
+      button.onclick = (e) => {
+        // @ts-ignore
+        if (!e.target?.value) return
+
+        try {
+          // @ts-ignore
+          window.navigator.clipboard.writeText(`${url}/${e.target.value}`)
+          toast.success('URL copiada al portapapeles!')
+        } catch {
+          toast.error('No se pudo copiar la URL al portapapeles')
+        }
+      }
+    }
+  }
+</script>

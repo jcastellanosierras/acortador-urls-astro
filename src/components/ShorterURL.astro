@@ -1,0 +1,79 @@
+---
+import { getUserByEmail } from '../utils/db';
+import ShorterURLReact from './ShorterURL'
+import { getSession } from 'auth-astro/server';
+
+const session = await getSession(Astro.request)
+
+let userId: number | undefined
+if (
+  session &&
+  session.user?.email
+) {
+  const res = await getUserByEmail(session.user.email)
+
+  if (
+    res.success &&
+    res.data
+  ) {
+    userId = res.data.id
+  }
+}
+---
+
+<section>
+  <ShorterURLReact userId={userId} client:load />
+</section>
+
+<style is:global>
+  section {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    margin: 0 auto;
+    align-items: center;
+  }
+
+  #shorter-url-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 1rem;
+    gap: 1rem;
+  }
+
+  .shorter-url-form-error {
+    font-size: 0.8rem;
+    color: red;
+  }
+
+  .shorter-url-form-input {
+    padding: 0.5rem;
+    font-size: 1.05rem;
+  }
+
+  .shorter-url-form-button {
+    padding: 0.5rem;
+    font-size: 1.05rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+
+    transition: background-color 0.2s;
+  }
+
+  .shorter-url-form-button:hover {
+    background-color: #72b6ff;
+  }
+
+  @media (max-width: 768px) {
+    section {
+      width: 90%;
+    }
+
+    .shorter-url-form-input {
+      font-size: 0.9rem;
+    }
+  }
+</style>
