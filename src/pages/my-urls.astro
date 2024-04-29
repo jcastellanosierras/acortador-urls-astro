@@ -2,6 +2,7 @@
 import { getSession } from "auth-astro/server";
 import Layout from "../layouts/Layout.astro";
 import { getUserByEmail, getUrlsFromUser } from "../utils/db";
+import ArrowBack from "../components/icons/ArrowBack.astro";
 
 const session = await getSession(Astro.request)
 
@@ -28,6 +29,10 @@ if (session && session.user?.email) {
 ---
 
 <Layout title="Mis URLs acortadas">
+  <a href="/">
+    <ArrowBack class="icon" />
+    Ir al inicio
+  </a>
   <h1>{h1}</h1>
   <ul>
     {urls.map(url => (
@@ -40,6 +45,31 @@ if (session && session.user?.email) {
 </Layout>
 
 <style>
+  .icon {
+    width: 2rem;
+    stroke: white;
+    transition: 0.2s;
+  }
+
+  h1 {
+    margin-top: 2rem;
+  }
+  
+  a {
+    color: white;
+    text-decoration: none;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  a:hover,
+  a:hover .icon {
+    color: gray;
+    stroke: gray;
+  }
+
   ul {
     list-style: none;
     display: flex;

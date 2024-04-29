@@ -19,6 +19,7 @@
     "@types/react-dom": "^18.2.25",
     "astro": "^4.6.3",
     "auth-astro": "^4.1.1",
+    "cookie": "^0.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sonner": "^1.4.41",
